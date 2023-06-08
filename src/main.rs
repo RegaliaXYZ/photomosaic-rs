@@ -2,33 +2,27 @@ use image::GenericImageView;
 
 fn main() {
     println!("Hello, world!");
+    // READING INPUT FOR NUMBER
+    let mut input = String::new();
 
-    loop {
-        let mut input = String::new();
-        println!("Enter an even number: ");
+    let number: i32 = loop {
         input.clear();
+
+        println!("Enter a number: ");
         std::io::stdin()
             .read_line(&mut input)
-            .expect("Failed to read line");
-        let number = match input.trim().parse::<i32>() {
-            Ok(i) => i,
-            Err(..) => {
-                println!("This was not an integer: {}", input.trim());
-                continue;
-            }
-        };
+            .expect("Failed to read from STDIN.");
 
-        if number % 2 == 0 {
-            break;
-        } else {
-            println!("This was not an even number: {}", number);
+        let input = input.trim();
+
+        match input.parse() {
+            Ok(i) => break i,
+            Err(_) => eprintln!("`{input}` is not an integer."),
         }
-    }
+    };
+    println!("You asked for {} tiles", number);
 
     let image = image::open("to_mosaic/image.jpg").expect("File not found!");
-
     let (w, h) = image.dimensions();
     println!("Image dimensions: {} x {}", w, h);
-
-    println!("There are {} pixels", image.pixels().count());
 }
