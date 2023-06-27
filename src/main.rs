@@ -58,17 +58,19 @@ fn main() {
     let image = image::open("to_mosaic/image.jpg").expect("File not found!");
     let (w, h) = image.dimensions();
     println!("Image dimensions: {} x {}", w, h);
+    let x_dim = w / number as u32;
+    let y_dim = h / number as u32;
+    println!("x_dim: {}, y_dim: {}", x_dim, y_dim);
     
     let images = get_all_images("src_images/");
     if images.len() == 0 {
         println!("No images found in src_images/ directory");
         return;
     }
-    let x_dim = w / number as u32;
-    let y_dim = h / number as u32;
     println!("--- Normalizing images ---");
     let normalized_images = normalize(images, x_dim, y_dim);
     println!("--- Creating mosaic ---");
-    let mosaic = create_mosaic(image, normalized_images, x_dim, y_dim);
+    let src_dim = [w, h];
+    let mosaic = create_mosaic(image, src_dim, normalized_images, x_dim, y_dim);
     mosaic.save("mosaic.jpg").unwrap();
 }
